@@ -21,6 +21,13 @@ class RedactingFormatter(logging.Formatter):
 
 def filter_datum(fields, redaction, message, separator):
     """Function to separate fields and redact info using regex"""
-    return ';'.join([re.sub(r'({})=[^&]+'.format(i), f'{i}={redaction}', x)
-                     if (i := x.split('=')[0]) in fields else x
-                     for x in message.split(separator)])
+    for field in fields:
+        message = re.sub(rf"{field}=(.*?)\{separator}",
+                         f'{field}={redaction}{separator}', message)
+    return message
+
+# def filter_datum(fields, redaction, message, separator):
+    """ask gpt to explain"""
+    # return ';'.join([re.sub(r'({})=[^&]+'.format(i), f'{i}={redaction}', x)
+    #                  if (i := x.split('=')[0]) in fields else x
+    #                  for x in message.split(separator)])
