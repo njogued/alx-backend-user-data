@@ -16,3 +16,17 @@ def filter_datum(fields, redaction, messages, separator):
             newitem = item
         newblock.append(newitem)
     return ";".join(newblock)
+
+
+def filter_datum1(fields, redaction, message, separator):
+    for field in fields:
+        message = re.sub(rf"{field}=(.*?)\{separator}",
+                         f'{field}={redaction}{separator}', message)
+    return message
+
+
+def filter_datum2(fields, redaction, message, separator):
+    """ask gpt to explain"""
+    return ';'.join([re.sub(r'({})=[^&]+'.format(i), f'{i}={redaction}', x)
+                     if (i := x.split('=')[0]) in fields else x
+                     for x in message.split(separator)])
