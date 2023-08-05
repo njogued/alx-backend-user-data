@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """A filter_datum function that logs obfuscated messages"""
-from typing import List
+from typing import List, Sequence
 import re
 import logging
 
@@ -13,7 +13,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields):
+    def __init__(self, fields: Sequence[str]):
         """Initialize an object"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
