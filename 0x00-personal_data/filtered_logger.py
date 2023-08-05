@@ -54,10 +54,10 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> MySQLConnection:
     """Get the db credentials and create a connector obj"""
-    user = os.getenv("PERSONAL_DATA_DB_USERNAME")
-    passwd = os.getenv("PERSONAL_DATA_DB_PASSWORD")
+    user = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    passwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     db_name = os.getenv("PERSONAL_DATA_DB_NAME")
-    db_host = os.getenv("PERSONAL_DATA_DB_HOST")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
     connector = MySQLConnection(host=db_host,
                                 database=db_name,
                                 user=user,
