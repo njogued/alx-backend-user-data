@@ -65,5 +65,21 @@ def get_db() -> MySQLConnection:
     return connector
 
 
-# if __name__ == '__main__':
-#     main()
+def main():
+    """Retrieve info on users from db and displays a filtered format"""
+    connector = get_db()
+    logger = get_logger()
+    cursor = connector.cursor()
+    cursor.execute("SELECT * FROM users")
+    usrs = cursor.fetchall()
+    message = 'name={}; email={}; phone={}; ssn={}; password={}; ip={}; \
+        last_login={}; user_agent={};'
+    for row in usrs:
+        name, email, phone, ssn, password,\
+            ip, last_login, user_agent = row
+        logger.info(message.format(name, email, phone, ssn, password, ip,
+                                   last_login, user_agent))
+
+
+if __name__ == '__main__':
+    main()
