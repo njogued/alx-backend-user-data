@@ -3,6 +3,8 @@
 from typing import List
 import re
 import logging
+import os
+from mysql.connector.connection import MySQLConnection
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -39,7 +41,8 @@ def filter_datum(fields: List[str], redaction: str,
 
 def get_logger() -> logging.Logger:
     """Get logger returns a logger object"""
-    user_data_logger = logging.Logger("user_data", logging.INFO)
+    user_data_logger = logging.Logger("user_data")
+    user_data_logger.setLevel(logging.INFO)
     user_data_logger.propagate = False
     stream_handler = logging.StreamHandler()
     # Stream handler determines where log messages are sent
@@ -47,6 +50,20 @@ def get_logger() -> logging.Logger:
     # Add the handler to the logger
     user_data_logger.addHandler(stream_handler)
     return user_data_logger
+
+
+def get_db() -> MySQLConnection:
+    """Get the db credentials and create a connector obj"""
+    user = os.getenv("PERSONAL_DATA_DB_USERNAME")
+    passwd = os.getenv("PERSONAL_DATA_DB_PASSWORD")
+    db_name = os.getenv("PERSONAL_DATA_DB_NAME")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST")
+    connector = MySQLConnection(host=db_host,
+                                database=db_name,
+                                user=user,
+                                password=passwd)
+    return connector
+
 
 # if __name__ == '__main__':
 #     main()
