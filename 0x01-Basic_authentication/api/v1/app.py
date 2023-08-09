@@ -23,6 +23,7 @@ if auth:
 
 @app.before_request
 def handle_auth():
+    """Function to handle authentication"""
     if not auth:
         pass
     else:
