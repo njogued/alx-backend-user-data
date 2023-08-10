@@ -35,12 +35,15 @@ def handle_auth():
     else:
         setattr(request, "current_user", auth.current_user(request))
         excluded_list = ['/api/v1/status/',
+                         '/api/v1/auth_session/login/',
                          '/api/v1/unauthorized/', '/api/v1/forbidden/']
         if auth.require_auth(request.path, excluded_list):
             if auth.authorization_header(request) is None:
                 abort(401)
             if auth.current_user(request) is None:
                 abort(403)
+            if auth.session_cookie(request) is None:
+                abort(401)
 
 
 @app.errorhandler(404)
