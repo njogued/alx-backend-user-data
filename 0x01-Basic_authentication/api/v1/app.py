@@ -24,16 +24,18 @@ if auth:
 @app.before_request
 def handle_auth():
     """Function to handle authentication"""
-    if not auth:
+    if auth is None:
         pass
     else:
         excluded_list = ['/api/v1/status/',
                          '/api/v1/unauthorized/', '/api/v1/forbidden/']
         if auth.require_auth(request.path, excluded_list):
             if auth.authorization_header(request) is None:
-                abort(401, description="Unauthorized")
+                abort(401)
             if auth.current_user(request) is None:
-                abort(403, description='Forbidden')
+                abort(403)
+        else:
+            pass
 
 
 @app.errorhandler(404)
