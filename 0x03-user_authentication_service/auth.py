@@ -18,7 +18,7 @@ class Auth:
     def register_user(self, email: str, password: str) -> User:
         """Method to register a new user"""
         try:
-            if (self._db.find_user_by(email=email)):
+            if self._db.find_user_by(email=email):
                 raise ValueError(f"User {email} already exists")
         except NoResultFound:
             hashed_password = _hash_password(password)
@@ -34,6 +34,17 @@ class Auth:
             return bcrypt.checkpw(password, user_obj.hashed_password)
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """Find user for given email, generate uuid and return session id"""
+        try:
+            user_obj = self._db.find_user_by(email=email)
+            user_session_id = _generate_uuid()
+            self._db.update_user(user_id=user_obj.id,
+                                 session_id=user_session_id)
+            return user_session_id
+        except NoResultFound:
+            return None
 
 
 def _hash_password(password: str) -> bytes:
