@@ -47,4 +47,15 @@ class DB:
             user_obj = self._session.query(User).filter_by(**kwargs).first()
             if not user_obj:
                 raise NoResultFound
-            return user_obj
+        return user_obj
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update user info for a certain user given the user id"""
+        user_obj = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if not hasattr(user_obj, key):
+                raise ValueError
+            else:
+                setattr(user_obj, key, value)
+        self._session.commit()
+        return None
