@@ -9,13 +9,13 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET'])
-def home_route():
+def home_route() -> str:
     """Method to render a json of the homepage"""
     return jsonify({"message": "Bienvenue"})
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
-def register_user_route():
+def register_user_route() -> str:
     """Function that implements logic to register a new user"""
     email = request.form.get('email')
     password = request.form.get('password')
@@ -27,7 +27,7 @@ def register_user_route():
 
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
-def login():
+def login() -> str:
     """Function to implement login logic"""
     email = request.form.get('email')
     password = request.form.get('password')
@@ -41,8 +41,14 @@ def login():
 
 
 @app.route('/profile', methods=['GET'], strict_slashes=False)
-def get_profile():
+def get_profile() -> str:
     """Function that returns a user's profile"""
+    sess_id = request.cookie.get('session_id')
+    user_obj = Auth.get_user_from_session_id(str(sess_id))
+    if user_obj:
+        return jsonify({"email": user_obj.email}), 200
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":
