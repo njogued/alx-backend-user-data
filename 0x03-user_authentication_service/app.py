@@ -14,7 +14,7 @@ def home_route():
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route('/users', methods=['POST'])
+@app.route('/users', methods=['POST'], strict_slashes=False)
 def register_user_route():
     """Function that implements logic to register a new user"""
     email = request.form.get('email')
@@ -26,7 +26,7 @@ def register_user_route():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route('/sessions', methods=['POST'])
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """Function to implement login logic"""
     email = request.form.get('email')
@@ -38,6 +38,11 @@ def login():
     else:
         abort(401)
     return response
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def get_profile():
+    """Function that returns a user's profile"""
 
 
 if __name__ == "__main__":
